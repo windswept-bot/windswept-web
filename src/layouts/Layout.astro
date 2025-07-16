@@ -4,8 +4,9 @@ import '../styles/global.css';
 
 // SEO Usage
 import { SEO } from 'astro-seo';
+import type { Props as SEOProps } from 'astro-seo';
 
-const defaultSeo = {
+const defaultSeo: SEOProps = {
   title: "Windswept",
   description: "Windswept is a Discord bot that makes managing your server easy through a focus on usability and aesthetics.",
   openGraph: {
@@ -21,7 +22,7 @@ const defaultSeo = {
   }
 };
 
-const { seo = {} } = Astro.props;
+const { seo = {} } = Astro.props as { seo?: SEOProps };
 
 // Get the current path and generate a page name
 const pathname = Astro.url.pathname;
@@ -37,16 +38,18 @@ const smartTitle =
   (pageName === "Home" ? "Windswept" : `Windswept | ${pageName}`);
 
 // Deep merge defaults with page-specific SEO
-function mergeDeep(target: Record<string, any>, source: Record<string, any>) {
+function mergeDeep(target: SEOProps, source: SEOProps): SEOProps {
   for (const key in source) {
+    const t = target as any;
+    const s = source as any;
     if (
-      source[key] &&
-      typeof source[key] === "object" &&
-      !Array.isArray(source[key])
+      s[key] &&
+      typeof s[key] === "object" &&
+      !Array.isArray(s[key])
     ) {
-      target[key] = mergeDeep(target[key] || {}, source[key]);
+      t[key] = mergeDeep(t[key] || {}, s[key]);
     } else {
-      target[key] = source[key];
+      t[key] = s[key];
     }
   }
   return target;
