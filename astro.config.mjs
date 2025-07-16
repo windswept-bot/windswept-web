@@ -1,13 +1,25 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import sitemap from '@astrojs/sitemap';
+import robotsTxt from 'astro-robots-txt';
+import robotsConfig from './robots.config';
 import tailwindcss from "@tailwindcss/vite";
-import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
+  // Production canonical URL
   site: 'https://windswept.bot',
+
+  // Vite config
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss()
+    ],
   },
-  integrations: [sitemap()],
+
+  // Astro integrations
+  integrations: [
+    sitemap(), 
+    robotsTxt(robotsConfig)
+  ],
 });
