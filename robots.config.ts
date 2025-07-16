@@ -1,15 +1,15 @@
 import type { RobotsTxtOptions } from 'astro-robots-txt';
-import siteConfig from './site.config';
 
 const robotsConfig: RobotsTxtOptions = {
   policy: [
     {
       userAgent: '*',
-      // The next line enables or disables the crawling on the `robots.txt` level
-      disallow: siteConfig.disableIndexing ? '/' : '',
+      disallow: '/',
+      // Once prod ready, set disallow to ''
+      // disallow: ''
     },
   ],
-  sitemapBaseFileName: 'sitemap-index', // default 'sitemap-index'
+  sitemapBaseFileName: 'sitemap-index', // default generated sitemap name, don't touch
   transform(content) {
     const commentsList = ['Some text before main content', 'Second line', 'Third line'];
     const comments = commentsList.map((item) => `# ${item}.`).join('\n');
