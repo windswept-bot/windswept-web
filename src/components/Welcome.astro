@@ -1,6 +1,22 @@
 ---
-import astroLogo from '../assets/astro.svg';
-import background from '../assets/background.svg';
+const pathnames = [
+	{
+		"path": "/",
+		"label": "Home"
+	},
+	{
+		"path": "/commands",
+		"label": "Commands"
+	},
+	{
+		"path": "/faqs",
+		"label": "FAQs"
+	},
+	{
+		"path": "/about",
+		"label": "About"
+	}
+]
 ---
 
 <div class="mx-auto w-full container">
@@ -15,6 +31,19 @@ import background from '../assets/background.svg';
 				<div class="size-24 bg-blue-500 shadow-md border"></div>
 				<div class="size-24 bg-green-500 shadow-md border"></div>
 				<div class="size-24 bg-pink-500 shadow-md border"></div>
+			</div>
+
+			<div class="place-self-center mt-12 flex flex-col gap-4">
+				{
+					pathnames.map((pathname) => (
+						<a 
+							href={pathname.path}
+							class="underline"
+						>
+							{pathname.label}
+						</a>
+					))
+				}
 			</div>
 		</section>
 	</main>
