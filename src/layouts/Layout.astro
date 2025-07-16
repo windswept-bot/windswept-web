@@ -1,6 +1,58 @@
 ---
 // Global styles
 import '../styles/global.css';
+
+// SEO Usage
+import { SEO } from 'astro-seo';
+
+const defaultSeo = {
+  title: "Windswept",
+  description: "Windswept is a Discord bot that makes managing your server easy through a focus on usability and aesthetics.",
+  openGraph: {
+    basic: {
+      title: "Windswept Bot",
+      type: "website",
+      image: "/favicon.svg",
+    }
+  },
+  extend: {
+    link: [{ rel: "icon", href: "/favicon.svg" }],
+    // You can add more default meta tags here if needed
+  }
+};
+
+const { seo = {} } = Astro.props;
+
+// Get the current path and generate a page name
+const pathname = Astro.url.pathname;
+let pageName = "Home";
+if (pathname !== "/") {
+  // Remove leading/trailing slashes, split, capitalize
+  pageName = pathname.replace(/\//g, " ").trim().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// If no title is provided, use the smart default
+const smartTitle =
+  seo.title ??
+  (pageName === "Home" ? "Windswept" : `Windswept | ${pageName}`);
+
+// Deep merge defaults with page-specific SEO
+function mergeDeep(target: Record<string, any>, source: Record<string, any>) {
+  for (const key in source) {
+    if (
+      source[key] &&
+      typeof source[key] === "object" &&
+      !Array.isArray(source[key])
+    ) {
+      target[key] = mergeDeep(target[key] || {}, source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+const mergedSeo = mergeDeep(structuredClone(defaultSeo), { ...seo, title: smartTitle });
 ---
 
 <!doctype html>
@@ -10,7 +62,7 @@ import '../styles/global.css';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<SEO {...mergedSeo} />
 	</head>
 	<body class="bg-blue-500 text-white font-balsamiq">
 		<slot />
